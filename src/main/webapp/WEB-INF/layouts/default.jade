@@ -1,0 +1,43 @@
+-@ val body: String = ""
+-@ var title: String = "Musher - Open source URL shortener"
+!!! 5
+html(lang="en")
+	head
+		title #{title}
+		link(href="/css/style.css" rel="stylesheet" type="text/css")
+		link(href="/css/jquery.jqplot.css" rel="stylesheet" type="text/css")
+		script(src="http://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js" type="text/javascript")
+		script(src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js" type="text/javascript")
+		script(src="/scripts/musher.js" type="text/javascript")
+	body
+		.app-bar
+			ul.top-header
+				li
+					a(href="http://nfang.me/musher") Home
+				li 
+					span#spDashboard Dashboard
+					#dashboard.dashboard-panel
+						input#txtShortUrl.url(type="url" placeholder="e.g., http://nfang.me/musher/aCx30B" spellcheck="false")
+						input#btnGoDashboard(type="button" value=">")
+						.clear
+		- unescape(body)
+		footer
+			span.copyright &copy: Copyright 2011 Nathan Fang. All rights reserved.
+		:javascript
+			$(function() {
+				WebFont.load({
+					google: {
+						families: ['Shadows Into Light', 'Give You Glory', 'Open Sans']
+					}
+				});
+				
+				$('#btnGoDashboard').click(function() {
+					window.location.replace($('#txtShortUrl').val() + "+");
+				});
+				
+				$('#spDashboard').click(function(e) {
+					if(e.target.id === "spDashboard")
+						$('#dashboard').toggle();
+					return false;
+				});
+			});

@@ -1,0 +1,80 @@
+- attributes("layout") = "/WEB-INF/layouts/default.jade"
+-@ import val metadata: me.nfang.musher.common.UrlMeta
+:css
+	body { margin: 50px auto; }
+.wrapper
+	header.dashboard-title #{shortLink}
+	.summary-panel
+		ul.summary
+			li.summary-item
+				span.label Long Link:
+				a(target="_blank" href="#{longLink}") #{longLink}
+			li.summary-item
+				span.label Created On:
+				span #{createdOn}
+		.total-clicks
+			span #{totalClicks} clicks
+	.clear
+	#timeline.timeline
+		header.chart-title Timeline
+		#timeline-chart
+	#referer.referer
+		header.chart-title Referer
+		#referer-chart
+	#country.country
+		header.chart-title Country
+		#country-chart
+script(type="text/javascript" src="/scripts/jquery.jqplot.min.js")
+script(type="text/javascript" src="/scripts/jqplot.barRenderer.min.js")
+script(type="text/javascript" src="/scripts/jqplot.categoryAxisRenderer.min.js")
+script(type="text/javascript" src="/scripts/jqplot.pieRenderer.min.js")
+:javascript
+	function paint(json) {
+		var data = $.parseJSON(json);
+		
+		if(data) {
+			$.jqplot('timeline-chart', [data.timeline], {
+				stackSeries: true,
+				seriesDefaults: {
+					renderer: $.jqplot.BarRenderer,
+					pointLabels: {
+						show: true
+					}
+				},
+				axes: {
+					xaxis: {
+						renderer: $.jqplot.CategoryAxisRenderer,
+						ticks: data.range
+					}
+				},
+				highlighter: {
+					show: false
+				}
+			});
+			
+			$.jqplot('referer-chart', [data.referer], {
+				seriesDefaults: {
+					renderer: $.jqplot.PieRenderer
+				},
+				legend: {
+					show: true
+				}
+			});
+
+			$.jqplot('country-chart', [data.country], {
+				seriesDefaults: {
+					renderer: $.jqplot.PieRenderer
+				},
+				legend: {
+					show: true
+				}
+			});
+		}
+	}
+	
+	$(function() {
+		var url = window.location.pathname
+		$.post("/dashboard", {
+			'hash': url.substr(url.lastIndexOf("/") + 1, 6)
+		}, paint);
+	});
