@@ -1,0 +1,9 @@
+## 
+# Include the following jar:
+#   commons-math-2.2.jar
+#   jersey-core-1.8.jar
+#   slf4j-nop-1.6.2.jar
+#   jersey-client-1.8.jar
+#   joda-time-1.6.2.jar
+##
+*.jar
